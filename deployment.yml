@@ -1,23 +1,66 @@
----
-apiVersion: extensions/v1beta1
 kind: Deployment
+apiVersion: extensions/v1beta1
 metadata:
-  name: demochat-master
+  name: demo-chat-app
+  namespace: default
+  selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/demo-chat-app
+  uid: 56c227b3-c068-11e7-9bac-42010a9c0035
+  resourceVersion: '78961'
+  generation: 2
+  creationTimestamp: '2017-11-03T07:26:42Z'
   labels:
-    service: demochat-master
+    app: demo-chat-app
+    io.codefresh.auto-generated: 42812cf7-b5af-40a2-8851-623600b6eb2c
+    io.codefresh.generated-at: '1509694001988'
+  annotations:
+    deployment.kubernetes.io/revision: '2'
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: demo-chat-app
+      io.codefresh.auto-generated: 42812cf7-b5af-40a2-8851-623600b6eb2c
+      io.codefresh.generated-at: '1509694001988'
   template:
     metadata:
-      annotations:
-        forceRedeployUniqId: "{{CF_REVISION}}"
+      creationTimestamp: null
       labels:
-        service: app
+        app: demo-chat-app
+        io.codefresh.auto-generated: 42812cf7-b5af-40a2-8851-623600b6eb2c
+        io.codefresh.generated-at: '1509694001988'
+      annotations:
+        forceRedeployUniqId: 2ac5f9c1-d55c-4b9e-a70b-3241c2d2c27f
     spec:
       containers:
-      - image: verchol/demochat:{{CF_BRANCH}}
-        name: app
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
-          protocol: TCP
+        - name: demo-chat-app
+          image: 'rubysparkle/demochat:board-demo'
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 40
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+      maxSurge: 50%
+status:
+  observedGeneration: 2
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  availableReplicas: 1
+  conditions:
+    - type: Available
+      status: 'True'
+      lastUpdateTime: '2017-11-03T07:26:47Z'
+      lastTransitionTime: '2017-11-03T07:26:47Z'
+      reason: MinimumReplicasAvailable
+      message: Deployment has minimum availability.
